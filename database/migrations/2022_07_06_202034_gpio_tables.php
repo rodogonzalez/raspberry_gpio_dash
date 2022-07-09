@@ -14,10 +14,18 @@ class GpioTables extends Migration
     public function up()
     {
         //
+        Schema::create('ports', function (Blueprint $table) {
+            $table->id();            
+            $table->string('port');            
+            $table->enum('status', ['off', 'on']);
+            $table->timestamps();            
+        });
+
         Schema::create('process_queue', function (Blueprint $table) {
             $table->id();
             $table->string('command');                       
             $table->string('port');
+            $table->string('delay');
             $table->enum('status', ['pending', 'processed']);
             $table->timestamps();
             $table->timestamp('executed_at', $precision = 0)->nullable();
@@ -34,5 +42,6 @@ class GpioTables extends Migration
     {
         //
         Schema::dropIfExists('process_queue');
+        Schema::dropIfExists('ports');
     }
 }
