@@ -4,7 +4,6 @@
     document.getElementById("preview").style.display = "none";    
     document.getElementById("qr-found").src = "https://chart.googleapis.com/chart?chs=250x250&cht=qr&UTF-8&chl=" + content;Â    
     document.getElementById("qr-text").value = content;
-    document.getElementById("frm-validator").action = "/wp-json/superlocales/v1/validate-order/" + content + '/';Â    
 
 	
   });
