@@ -102,7 +102,7 @@ class process_gpio_queue extends Command
 
 
     private function get_port_status(){
-        $this->info('reading db ... ' );
+        
 
         // Create a GPIO object
         $gpio = new GPIO();
@@ -117,10 +117,10 @@ class process_gpio_queue extends Command
                 case "off":
                     $pin->setValue(PinInterface::VALUE_HIGH);
                     break;
-            }
-            
+            }            
             
         }
+        $this->info('updated from db ... ' );
 
 
     }
