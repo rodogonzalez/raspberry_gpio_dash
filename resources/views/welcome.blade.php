@@ -22,27 +22,8 @@
             <video id="preview"></video>
         </div>        
     </div>
-    <div class='row'>
-        <div id="port_id_ui_1" class='col-md-3 port '>            
-            <label>
-                <input class="pristine" type="checkbox" name="switch" value="on">
-            </label>
-        </div>        
-        <div  id="port_id_ui_2" class='col-md-3 port'>
-            <label>
-                <input class="pristine" type="checkbox" name="switch" value="on">
-            </label>
-        </div>        
-        <div  id="port_id_ui_3" class='col-md-3 port'>
-            <label>
-                <input class="pristine" type="checkbox" name="switch" value="on">
-            </label>
-        </div>        
-        <div  id="port_id_ui_4" class='col-md-3 port'>
-            <label>
-                <input class="pristine" type="checkbox" name="switch" value="on">
-            </label>
-        </div>        
+    <div id='panel' class='row'>
+        
     
     </div>
 
