@@ -17,10 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/test', function () {
-    return view('welcome');
+Route::get('/port-status', function () {
+    $ports = \App\Models\Port::all();
+    return json_encode($ports);
 });
+ 
 Route::post('/post-gpio-order', function () {
     //return view('welcome');
 })->name('enter-order');;
