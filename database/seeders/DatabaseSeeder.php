@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        $puertos_disponibles = ['20','18','17','26'];
+        $puertos_disponibles = ['20','17','18','26'];
         $estados = ['on','off','on','on','on'];        
         $total = 4; 
         /*
