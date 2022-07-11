@@ -100,6 +100,30 @@ class process_gpio_queue extends Command
         }
     }
 
+
+    private function get_port_status(){
+
+        // Create a GPIO object
+        $gpio = new GPIO();
+        $ports = \App\Models\Port::all();
+
+        foreach($ports as $port){
+            $pin = $gpio->getOutputPin($port->port);
+            switch($port->status){
+                case "on":
+                    $pin->setValue(PinInterface::VALUE_LOW);
+                    break;
+                case "off":
+                    $pin->setValue(PinInterface::VALUE_HIGH);
+                    break;
+            }
+            
+            
+        }
+
+
+    }
+
     /**
      * Execute the console command.
      *
@@ -112,7 +136,7 @@ class process_gpio_queue extends Command
 // await , the execution of this command will take around 1 minute 
 
         for($second=0; $second<=58; $second++){
-            $this->every_raise();        
+            $this->get_port_status();        
             sleep(1);
         }        
     }
