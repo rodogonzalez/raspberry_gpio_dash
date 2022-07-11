@@ -13,10 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-/*
+
         $puertos_disponibles = ['18','17','20','26'];
-        $estados = ['on','off','on','on','on'];
+        $estados = ['on','off','on','on','on'];        
         $total = 4; 
+        /*
         for ($x = 0; $x < $total; $x++){
             $command_io = new \App\Models\ProcessQueue([
                 'command' => $estados[rand(0,1)] ,
