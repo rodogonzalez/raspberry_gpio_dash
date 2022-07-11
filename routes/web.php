@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,24 @@ Route::get('/', function () {
 Route::get('/port-status', function () {
     $ports = \App\Models\Port::all();
     return json_encode($ports);
+});
+
+
+Route::get('/set-port-status', function () {
+    
+    
+    // update del port 
+    $port_record = \App\Models\Port::firstOrCreate([
+        'port' => \Request::input('port')
+    ]);
+
+    $port_record->status = $port_record->status=='on' ? 'off' : 'on'  ; 
+    $port_record->save();
+    return json_encode($port_record);
+
+    //$gpio_record= \App\Models\ProcessQueue::firstWhere('id',$gpio_command->id);
+    //$ports = \App\Models\Port::all();
+    //return json_encode($ports);
 });
  
 Route::post('/post-gpio-order', function () {

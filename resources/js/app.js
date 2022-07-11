@@ -69,6 +69,29 @@ class BreakerPanel extends React.Component {
       )
   }
 
+  Breaker_click(){
+    fetch("/port-status")
+      .then(res => res.json())
+      .then(        
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            items: result
+          });
+        },
+        // Nota: es importante manejar errores aquí y no en 
+        // un bloque catch() para que no interceptemos errores
+        // de errores reales en los componentes.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+
+  }
+
   render() {
     const { error, isLoaded, items } = this.state;
     
@@ -77,12 +100,12 @@ class BreakerPanel extends React.Component {
     } else if (!isLoaded) {
       return <div>Loading...</div>;
     } else {      
-      console.log(items);
       return (
         <div>
           
           {items.map(item => (
-            <div class='col-md-3 port'> 
+            <div key={item.id} class='col-md-3 port' port-number={item.port} onClick={this.Breaker_click}> 
+            Port:{item.port}
                 <label>
                     <input class='pristine ' type='checkbox' name='switch' checked={item.status=='on' ? 'checked':''}/>
                 </label>
