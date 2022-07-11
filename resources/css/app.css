@@ -3,7 +3,11 @@ body {
     background: #e3da74;
 
   }
-  
+#preview{
+  min-width:640px;
+  min-height:400px;
+
+}
   
 .container {    
     width: 90vw;

@@ -2,9 +2,7 @@
 
 <div class='container'>
     <div class='row'>
-        <div class='col-md-8'>
-            <video id="preview"></video>
-        </div>        
+        
         <div class='col-md-4'>
             <form id="frm-validator" action="{{route('enter-order');}}" method="post">
                 @csrf
@@ -20,6 +18,9 @@
 
             
         </div>
+        <div class='col-md-8'>
+            <video id="preview"></video>
+        </div>        
     </div>
 
 
