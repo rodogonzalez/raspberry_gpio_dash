@@ -102,6 +102,7 @@ class process_gpio_queue extends Command
 
 
     private function get_port_status(){
+        $this->info('reading db ... ' );
 
         // Create a GPIO object
         $gpio = new GPIO();
@@ -134,10 +135,10 @@ class process_gpio_queue extends Command
         
 // this command is executed each minute, so to keep it executing each 2 seconds , it will be using the command sleep to 
 // await , the execution of this command will take around 1 minute 
-        $this->every_raise();        
-        for($second=0; $second<=58; $second++){
+        //$this->every_raise();        
+        for($second=0; $second<=5; $second++){
             $this->get_port_status();        
-            sleep(1);
+            sleep(10);
         }        
     }
 }
