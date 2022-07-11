@@ -11,7 +11,7 @@
             </form>
             <span id='code_info'>
                 <div id="qr-result"></div>
-                <h1 id="outputData" ></h1>
+                <div id="outputData" ></div>
                 <p><img id="qr-found" src=""></p>
 
             </span>
@@ -21,6 +21,29 @@
         <div class='col-md-8'>
             <video id="preview"></video>
         </div>        
+    </div>
+    <div class='row'>
+        <div id="port_id_ui_1" class='col-md-3 port '>            
+            <label>
+                <input class="pristine" type="checkbox" name="switch" value="on">
+            </label>
+        </div>        
+        <div  id="port_id_ui_2" class='col-md-3 port'>
+            <label>
+                <input class="pristine" type="checkbox" name="switch" value="on">
+            </label>
+        </div>        
+        <div  id="port_id_ui_3" class='col-md-3 port'>
+            <label>
+                <input class="pristine" type="checkbox" name="switch" value="on">
+            </label>
+        </div>        
+        <div  id="port_id_ui_4" class='col-md-3 port'>
+            <label>
+                <input class="pristine" type="checkbox" name="switch" value="on">
+            </label>
+        </div>        
+    
     </div>
 
 
