@@ -2173,8 +2173,7 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component) {
       fetch("/set-port-status?port=" + _port).then(function (res) {
         return res.json();
       }).then(function (result) {
-        document.getElementById("checkbox_" + _port).checked = result.status == 'on' ? true : false; //console.log(this.checked);
-
+        document.getElementById("checkbox_" + _port).checked = result.status == 'on' ? true : false;
         return true;
       });
     }
