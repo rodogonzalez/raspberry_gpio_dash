@@ -49,7 +49,7 @@ class BreakerPanel extends React.Component {
 
   componentDidMount() {
     fetch("/port-status")
-      //.then(res => res.json())
+      .then(res => res.json())
       .then(        
         (result) => {
           this.setState({
@@ -71,20 +71,22 @@ class BreakerPanel extends React.Component {
 
   render() {
     const { error, isLoaded, items } = this.state;
+    
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
       return <div>Loading...</div>;
     } else {      
+      console.log(items);
       return (
         <div>
           
           {items.map(item => (
-        <div>
-            <label>
-                <input class='pristine' type='checkbox' name='switch' value={item.status}/>
-            </label>
-        </div>
+            <div class='col-md-3 port'> 
+                <label>
+                    <input class='pristine ' type='checkbox' name='switch' checked={item.status=='on' ? 'checked':''}/>
+                </label>
+            </div>
           ))}
         </div>
       );

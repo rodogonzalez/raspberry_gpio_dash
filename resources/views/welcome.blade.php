@@ -37,7 +37,7 @@
 <link rel="stylesheet" href="/css/app.css" >
 <script type='text/javascript' src='https://rawgit.com/schmich/instascan-builds/master/instascan.min.js?ver=6.0' id='script-index-scan-js'></script>
 <script type='text/javascript' src='/js/app.js?ver={{date("h:i")}}' id='script-scanner-js'></script>
-
+ 
 
 
 
