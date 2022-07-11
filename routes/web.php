@@ -21,3 +21,6 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return view('welcome');
 });
+Route::post('/post-gpio-order', function () {
+    //return view('welcome');
+})->name('enter-order');;
