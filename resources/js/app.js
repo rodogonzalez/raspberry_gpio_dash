@@ -31,7 +31,7 @@ Instascan.Camera.getCameras().then(function (cameras) {
     console.error('No cameras found.');
   }
   }).catch(function (e) {
-    formatconsole.error(e);
+    console.error(e);
 });
 
 
