@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,13 +20,20 @@ Route::get('/', function () {
 });
 
 Route::get('/port-status', function () {
-    $ports = \App\Models\Port::all();
-    return json_encode($ports);
+
+        
+    return Cache::rememberForever('ports_image',  function () {
+        $ports = \App\Models\Port::all();
+        return json_encode($ports);
+    });
+    
+
+    
 });
 
 
 Route::get('/set-port-status', function () {
-    
+
     
     // update del port 
     $port_record = \App\Models\Port::firstOrCreate([
@@ -34,6 +42,11 @@ Route::get('/set-port-status', function () {
 
     $port_record->status = $port_record->status=='on' ? 'off' : 'on'  ; 
     $port_record->save();
+
+    // destroy cache 
+    Cache::forget('ports_image');
+
+
     return json_encode($port_record);
 
     //$gpio_record= \App\Models\ProcessQueue::firstWhere('id',$gpio_command->id);

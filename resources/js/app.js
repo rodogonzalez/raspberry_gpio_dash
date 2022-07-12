@@ -74,10 +74,8 @@ class BreakerPanel extends React.Component {
     fetch("/set-port-status?port="+_port)
     .then(res => res.json())
     .then(        
-      (result) => {
-        console.log(result);
-        document.getElementById("checkbox_" +_port ).checked = true;
-        //console.log(this.checked);
+      (result) => {        
+        document.getElementById("checkbox_" +_port ).checked = result.status=='on' ? true : false;        
         return true;
       }
     )

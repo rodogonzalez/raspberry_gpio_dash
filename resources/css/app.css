@@ -119,8 +119,8 @@ body {
     position: absolute;
     top: -1.5em;
     left: -1.5em;
-    width: 16em;
-    height: 20em;
+    width: 10em;
+    height: 9em;
     z-index: -1;
   }
   input[type=checkbox], input[type=checkbox]:before, input[type=checkbox]:after {
