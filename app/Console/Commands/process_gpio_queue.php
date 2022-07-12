@@ -105,8 +105,12 @@ class process_gpio_queue extends Command
         
 
         // Create a GPIO object
-        $gpio = new GPIO();
-        $ports = \App\Models\Port::all();
+        $gpio = new GPIO();         
+
+         $ports =Cache::rememberForever('ports_image',  function () {
+            $ports = \App\Models\Port::all();
+            return json_encode($ports);
+        });
 
         foreach($ports as $port){
             $pin = $gpio->getOutputPin($port->port);
