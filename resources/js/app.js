@@ -1,39 +1,130 @@
 require('./bootstrap');
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+const $ = require( "jquery" )( window );
 
 
 console.log('start app');
 
 
-let scanner = new Instascan.Scanner({ video: document.getElementById('preview') , continuous : true});
-let camera ;
+
 function clean_previous_qr(){
     document.getElementById("code_info").style.display = "none";    
-    scanner.start(camera);
+    //scanner.start(camera);
 }
 
-scanner.addListener('scan', function (content) {  
-  document.getElementById('outputData').innerHTML=content;
-  //document.getElementById("preview").style.display = "none";    
-  document.getElementById("qr-found").src = "https://chart.googleapis.com/chart?chs=250x250&cht=qr&UTF-8&chl=" + content;    
-  document.getElementById("qr-text").value = content;
-  document.getElementById("code_info").style.display = "block";      
-  scanner.stop(camera);
-  setTimeout(clean_previous_qr, 5*1000);
-});
 
-Instascan.Camera.getCameras().then(function (cameras) {
-  if (cameras.length > 0) {
-    camera=cameras[0];
-    scanner.start(camera);
-  } else {
-    console.error('No cameras found.');
+
+
+
+
+class Form_QR_Detected_Request extends React.Component {
+  constructor(props) {
+    super(props);    
+    this.state = {      
+      port: 0,
+      status: 'off',
+      scanner : new Instascan.Scanner({ video: document.getElementById('preview') }),
+      camera : null 
+    };   
+        
+ 
+
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
-  }).catch(function (e) {
-    console.error(e);
-});
 
+  save_form(){
+    
+    console.log("saving ... ");
+
+
+    fetch("/post-gpio-order")
+    .then(res => res.json())
+    .then(        
+      (result) => {        
+        document.getElementById("checkbox_" +_port ).checked = result.status=='on' ? true : false;        
+        return true;
+      }
+    )
+
+    
+  
+      return false;
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+  track_action(port,status){}
+  returnfalse(){return false;}
+
+  render() {
+
+    let this_states = this.state;
+    let _me_this = this;
+
+    Instascan.Camera.getCameras().then(function (cameras) {
+
+      if (cameras.length > 0) {
+        let ca_camera = cameras[0];        
+        this_states.scanner.start(ca_camera);
+      } else {
+        console.error('No cameras found.');
+      }
+      }).catch(function (e) {
+        console.error(e);
+    });
+
+    
+
+    this_states.scanner.addListener('scan', function (content) {  
+  
+
+      content= JSON.parse(content);
+  
+      _me_this.setState({port: content.port });
+      _me_this.setState({status:content.status });
+      
+      
+    
+      
+    });
+
+
+
+
+
+    return (      
+      <form onSubmit={() => this.returnfalse()}>              
+          Port:
+          <input
+            id="port"
+            name="port"
+            type="number"
+            value={this.state.port}
+            onChange={() => this.handleInputChange()}
+            />
+
+          Status:
+          <input
+            id="status"
+            name="status"
+            type="text"
+            value={this.state.status}       
+            onChange={() => this.handleInputChange()}
+                  />
+        <input type="button" value="Process"  onClick={() => this.save_form()} />
+      </form>
+      
+    );
+  }
+}
 
 
 
@@ -45,6 +136,8 @@ class BreakerPanel extends React.Component {
       isLoaded: false,
       items: []
     };
+
+
   }
 
   componentDidMount() {
@@ -94,10 +187,10 @@ class BreakerPanel extends React.Component {
         <div>
           
           {items.map(item => (
-            <div key={item.id} id={"port_"+item.port} class='col-md-3 port' port={item.port}  > 
+            <div key={item.id} id={"port_"+item.port}  class='col-md-3 port' port={item.port}  > 
             Port:{item.port}
                 <label>
-                    <input id={"checkbox_"+item.port} class='pristine' onChange={() => this.Breaker_click(item.port)}  type='checkbox' name='switch' checked={item.status=='on' ? 'checked':''}/>
+                    <input id={"checkbox_"+item.port}  class='pristine' onChange={() => this.Breaker_click(item.port)}  type='checkbox' name='switch' checked={item.status=='on' ? 'checked':''}/>
                 </label>
             </div>
           ))}
@@ -111,9 +204,20 @@ class BreakerPanel extends React.Component {
 
 export default BreakerPanel;
 
+
 const panel = ReactDOM.createRoot(
   document.getElementById('panel')
 );
 
+const frm_section = ReactDOM.createRoot(
+  document.getElementById('frm-submit')
+);
+
+
+
+
 const _breakerPanel = <BreakerPanel name='breaker_list'/>;
 panel.render(_breakerPanel);
+
+const _frmQR_Catch = <Form_QR_Detected_Request  />;
+frm_section.render(_frmQR_Catch);

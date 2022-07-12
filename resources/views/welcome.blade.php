@@ -1,14 +1,15 @@
 
 
 <div class='container'>
+    <div id='panel' class='row'>
+        
+    
+    </div>
     <div class='row'>
         
         <div class='col-md-4'>
-            <form id="frm-validator" action="{{route('enter-order');}}" method="post">
-                @csrf
-                <input type="textfield" id="qr-text" value="" placeholder="Ingrese el Codigo AQUI" style="font-size:20px"></p>
-                <p><input type="submit" value="Process"></p>
-            </form>
+            <span id="frm-submit"></span>
+            
             <span id='code_info'>
                 <div id="qr-result"></div>
                 <div id="outputData" ></div>
@@ -19,13 +20,10 @@
             
         </div>
         <div class='col-md-8'>
-            <video id="preview"></video>
+            <video id="preview"></video>            
         </div>        
     </div>
-    <div id='panel' class='row'>
-        
     
-    </div>
 
 
 </div>

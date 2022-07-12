@@ -56,4 +56,5 @@ Route::get('/set-port-status', function () {
  
 Route::post('/post-gpio-order', function () {
     //return view('welcome');
+    return json_encode($_REQUEST);
 })->name('enter-order');;
