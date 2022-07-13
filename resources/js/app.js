@@ -1,7 +1,10 @@
 require('./bootstrap');
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+
 const $ = require( "jquery" )( window );
+
 
 
 console.log('start app');
@@ -186,7 +189,9 @@ class BreakerPanel extends React.Component {
 
 
     this.state.scanner.addListener('scan', function (content) {  
-  
+
+      
+      document.getElementById("audio_controler").play();
       
       content= JSON.parse(content);     
       if (content.port==undefined) return ; 

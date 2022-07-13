@@ -10,14 +10,18 @@
                 <div id="qr-result"></div>
                 <div id="outputData" ></div>
                 <p><img id="qr-found" src=""></p>
+                <audio id='audio_controler' controls style='display:none;'>
+                
+                    <source src="/audio/beep.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
 
             </span>
 
             
         </div>
         <div class='col-md-4'>
-        <div id='panel' class='row' />       
-    
+        <div id='panel' class='row' >          
             
                         
         </div>        
