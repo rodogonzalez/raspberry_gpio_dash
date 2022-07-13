@@ -2247,13 +2247,15 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
     }
   }, {
     key: "Breaker_click",
-    value: function Breaker_click(_port) {
-      var this_states = this.state; //this_states.scanner.stop(this_states.camera);
+    value: function Breaker_click(port) {
+      var this_states = this.state;
+      document.getElementById("checkbox_" + port).disabled = true; //this_states.scanner.stop(this_states.camera);
 
-      fetch("/set-port-status?port=" + _port).then(function (res) {
+      fetch("/set-port-status?port=" + port).then(function (res) {
         return res.json();
       }).then(function (result) {
-        document.getElementById("checkbox_" + _port).checked = result.status == 'on' ? true : false; //this_states.scanner.start(this_states.camera);
+        document.getElementById("checkbox_" + port).checked = result.status == 'on' ? true : false;
+        document.getElementById("checkbox_" + port).disabled = false; //this_states.scanner.start(this_states.camera);
 
         return true; //window.location.reload(false);
       });
@@ -2292,11 +2294,13 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
         content = JSON.parse(content);
         if (content.port == undefined) return;
         console.log('detected -> ' + content.port); //if (this_states.last_qr_port==content.port) return ;
-        //this_states.scanner.stop(this_states.camera);
-        //document.getElementById("checkbox_" + content.port ).checked = ! document.getElementById("checkbox_" + content.port ).checked;        
-        //this_states.scanner.start(this_states.camera);
+
+        if (document.getElementById("checkbox_" + content.port).disabled) return; //this_states.scanner.stop(this_states.camera);
+
+        document.getElementById("checkbox_" + content.port).disabled = true; //this_states.scanner.start(this_states.camera);
 
         _me_this.Breaker_click(content.port); //setTimeout(_me_this.reset_last_port_scanned, 15000);
+        //_me_this.state.scanner.removeEventListener("scan",this);
 
       });
 

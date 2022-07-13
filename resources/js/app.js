@@ -137,14 +137,16 @@ class BreakerPanel extends React.Component {
       )
   }
 
-  Breaker_click(_port){
+  Breaker_click(port){
     let this_states = this.state;    
+    document.getElementById("checkbox_" + port ).disabled=true;
     //this_states.scanner.stop(this_states.camera);
-    fetch("/set-port-status?port="+_port)
+    fetch("/set-port-status?port="+port)
     .then(res => res.json())
     .then(        
       (result) => {        
-        document.getElementById("checkbox_" +_port ).checked = result.status=='on' ? true : false;        
+        document.getElementById("checkbox_" +port ).checked = result.status=='on' ? true : false;        
+        document.getElementById("checkbox_" +port ).disabled = false;        
         //this_states.scanner.start(this_states.camera);
         return true;
         //window.location.reload(false);
@@ -190,15 +192,17 @@ class BreakerPanel extends React.Component {
       if (content.port==undefined) return ; 
       console.log('detected -> ' +content.port);
       //if (this_states.last_qr_port==content.port) return ;
+      if (document.getElementById("checkbox_" + content.port ).disabled) return;
 
       //this_states.scanner.stop(this_states.camera);
-      //document.getElementById("checkbox_" + content.port ).checked = ! document.getElementById("checkbox_" + content.port ).checked;        
+      document.getElementById("checkbox_" + content.port ).disabled = true;        
       //this_states.scanner.start(this_states.camera);
       _me_this.Breaker_click(content.port);
 
       //setTimeout(_me_this.reset_last_port_scanned, 15000);
 
- 
+      //_me_this.state.scanner.removeEventListener("scan",this);
+
     });
 
     
