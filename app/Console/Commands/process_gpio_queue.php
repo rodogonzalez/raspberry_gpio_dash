@@ -139,7 +139,7 @@ class process_gpio_queue extends Command
 // this command is executed each minute, so to keep it executing each 2 seconds , it will be using the command sleep to 
 // await , the execution of this command will take around 1 minute 
         $this->every_raise();        
-        for($second=0; $second<=30000; $second++){
+        while(1!=2){
             $this->get_port_status();        
             sleep(5);
         }        
