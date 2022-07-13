@@ -2215,10 +2215,12 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
       isLoaded: false,
       items: [],
       scanner: new Instascan.Scanner({
-        video: document.getElementById('preview')
+        video: document.getElementById('preview'),
+        refractoryPeriod: 1000
       }),
       camera: null,
-      last_qr_port: 0
+      last_qr_port: 0,
+      last_qr_found: ''
     };
     return _this4;
   }
@@ -2249,13 +2251,15 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
     key: "Breaker_click",
     value: function Breaker_click(port) {
       var this_states = this.state;
-      document.getElementById("checkbox_" + port).disabled = true; //this_states.scanner.stop(this_states.camera);
+      document.getElementById("checkbox_" + port).disabled = true;
+      document.getElementById("port_item_" + port).style.opacity = 0.25; //this_states.scanner.stop(this_states.camera);
 
       fetch("/set-port-status?port=" + port).then(function (res) {
         return res.json();
       }).then(function (result) {
         document.getElementById("checkbox_" + port).checked = result.status == 'on' ? true : false;
-        document.getElementById("checkbox_" + port).disabled = false; //this_states.scanner.start(this_states.camera);
+        document.getElementById("checkbox_" + port).disabled = false;
+        document.getElementById("port_item_" + port).style.opacity = 1; //this_states.scanner.start(this_states.camera);
 
         return true; //window.location.reload(false);
       });
@@ -2292,6 +2296,7 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
       });
       this.state.scanner.addListener('scan', function (content) {
         document.getElementById("audio_controler").play();
+        document.getElementById("outputData").value = content;
         content = JSON.parse(content);
         if (content.port == undefined) return;
         console.log('detected -> ' + content.port); //if (this_states.last_qr_port==content.port) return ;
@@ -2316,7 +2321,9 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
             id: "port_" + item.port,
             "class": "col-md-3 port",
             port: item.port
-          }, "Port:", item.port, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+          }, "Port:", item.port, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+            id: "port_item_" + item.port
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
             id: "checkbox_" + item.port,
             "class": "pristine",
             onChange: function onChange() {

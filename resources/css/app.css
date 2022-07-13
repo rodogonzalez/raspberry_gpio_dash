@@ -9,11 +9,7 @@ body {
 
 }
   
-.container {    
-    width: 90vw;
-  }
-
-
+ 
   label, label:before, input[type=checkbox]:before, input[type=checkbox]:after {
     box-sizing: border-box;
     display: block;
@@ -104,7 +100,7 @@ body {
     font-size: calc(12px + 6 * (100vw - 320px) / (1280 - 320));
     margin: 1.5em;
     position: relative;
-    width: 8em;
+    width: 5em;
     height: 8em;
     -webkit-tap-highlight-color: transparent;
   }
@@ -117,8 +113,6 @@ body {
     content: "";
     margin: auto;
     position: absolute;
-    top: -1.5em;
-    left: -1.5em;
     width: 6em;
     height: 8.5em;
     z-index: -1;
@@ -160,8 +154,8 @@ body {
        box-shadow var(--transDur) ease-in-out,
        filter var(--transDur) ease-in-out,
        -webkit-filter var(--transDur) ease-in-out;
-    width: 100%;
-    height: 50%;
+    width: 100px;
+    height: 80px;
   }
   input[type=checkbox]:before {
     animation: switchBeforeOff var(--transDur) steps(1,start);

@@ -1,37 +1,27 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<div class='container'>
-    
-    <div class='row'>
+<div class='container'>    
+    <div class='row'>        
         
-        <div class='col-md-4'>                        
+        <div class='col-md-8'>
+            <div id='panel'></div>
+        </div>        
+        <div class='col-md-4'>
+            <video id="preview"></video>            
+            <div id="outputData" ></div>
             <span id='code_info' >
                 <span id="frm-submit"></span>
                 <div id="qr-result"></div>
-                <div id="outputData" ></div>
-                <p><img id="qr-found" src=""></p>
+                
+                <img id="qr-found" src="">
                 <audio id='audio_controler' controls style='display:none;'>
                 
                     <source src="/audio/beep.mp3" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
-
-            </span>
-
-            
-        </div>
-        <div class='col-md-4'>
-        <div id='panel' class='row' >          
-            
-                        
-        </div>        
-        <div class='col-md-4'>
-            <video id="preview"></video>            
+            </span>            
         </div>        
     </div>
-    
-
-
 </div>
 
 <!-- Latest compiled and minified CSS -->
