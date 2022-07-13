@@ -1,16 +1,12 @@
 
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class='container'>
-    <div id='panel' class='row'>
-        
     
-    </div>
     <div class='row'>
         
-        <div class='col-md-4'>
-            <span id="frm-submit"></span>
-            
-            <span id='code_info'>
+        <div class='col-md-4'>                        
+            <span id='code_info' >
+                <span id="frm-submit"></span>
                 <div id="qr-result"></div>
                 <div id="outputData" ></div>
                 <p><img id="qr-found" src=""></p>
@@ -19,7 +15,13 @@
 
             
         </div>
-        <div class='col-md-8'>
+        <div class='col-md-4'>
+        <div id='panel' class='row' />       
+    
+            
+                        
+        </div>        
+        <div class='col-md-4'>
             <video id="preview"></video>            
         </div>        
     </div>

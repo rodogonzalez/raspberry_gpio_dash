@@ -54,7 +54,19 @@ Route::get('/set-port-status', function () {
     //return json_encode($ports);
 });
  
-Route::post('/post-gpio-order', function () {
+Route::get('/post-gpio-order', function () {
+
+    $port_record = \App\Models\Port::firstOrCreate([
+        'port' => \Request::input('port')
+    ]);
+
+    $port_record->status = \Request::input('status') ; 
+    $port_record->save();
+
+    // destroy cache 
+    Cache::forget('ports_image');
+
+
     //return view('welcome');
-    return json_encode($_REQUEST);
+    return json_encode(\Request::all());
 })->name('enter-order');;

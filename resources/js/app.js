@@ -6,16 +6,7 @@ const $ = require( "jquery" )( window );
 
 console.log('start app');
 
-
-
-function clean_previous_qr(){
-    document.getElementById("code_info").style.display = "none";    
-    //scanner.start(camera);
-}
-
-
-
-
+ 
 
 
 class Form_QR_Detected_Request extends React.Component {
@@ -23,9 +14,7 @@ class Form_QR_Detected_Request extends React.Component {
     super(props);    
     this.state = {      
       port: 0,
-      status: 'off',
-      scanner : new Instascan.Scanner({ video: document.getElementById('preview') }),
-      camera : null 
+      status: 'off' 
     };   
         
  
@@ -33,17 +22,26 @@ class Form_QR_Detected_Request extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  save_form(){
+  save_form(port_number, port_status){
     
-    console.log("saving ... ");
-
-
-    fetch("/post-gpio-order")
+    console.log("saving ... " + port_status);  
+    
+    fetch("/post-gpio-order?port=" + port_number + "&status=" +  port_status,{
+      headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            
+          },
+          method: "GET"
+      })
     .then(res => res.json())
     .then(        
       (result) => {        
-        document.getElementById("checkbox_" +_port ).checked = result.status=='on' ? true : false;        
-        return true;
+        this.track_action(this.state.status, this.state.port);
+        document.getElementById("checkbox_" +port_number ).checked = port_status=='on' ? true : false;        
+       // window.location.reload(false);
+
+        return false; // it returns false to avoid refresh page;
       }
     )
 
@@ -61,40 +59,14 @@ class Form_QR_Detected_Request extends React.Component {
       [name]: value
     });
   }
-  track_action(port,status){}
+  track_action(port,status){
+    console.log(port, status);
+
+  }
   returnfalse(){return false;}
 
   render() {
 
-    let this_states = this.state;
-    let _me_this = this;
-
-    Instascan.Camera.getCameras().then(function (cameras) {
-
-      if (cameras.length > 0) {
-        let ca_camera = cameras[0];        
-        this_states.scanner.start(ca_camera);
-      } else {
-        console.error('No cameras found.');
-      }
-      }).catch(function (e) {
-        console.error(e);
-    });
-
-    
-
-    this_states.scanner.addListener('scan', function (content) {  
-  
-
-      content= JSON.parse(content);
-  
-      _me_this.setState({port: content.port });
-      _me_this.setState({status:content.status });
-      
-      
-    
-      
-    });
 
 
 
@@ -119,7 +91,7 @@ class Form_QR_Detected_Request extends React.Component {
             value={this.state.status}       
             onChange={() => this.handleInputChange()}
                   />
-        <input type="button" value="Process"  onClick={() => this.save_form()} />
+        <input type="button" value="Process"  onClick={() => this.save_form(this.state.port,this.state.status)} />
       </form>
       
     );
@@ -134,7 +106,10 @@ class BreakerPanel extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
-      items: []
+      items: [],
+      scanner : new Instascan.Scanner({ video: document.getElementById('preview') }),
+      camera : null,
+      last_qr_port:0
     };
 
 
@@ -163,20 +138,72 @@ class BreakerPanel extends React.Component {
   }
 
   Breaker_click(_port){
-    
+    let this_states = this.state;    
+    //this_states.scanner.stop(this_states.camera);
     fetch("/set-port-status?port="+_port)
     .then(res => res.json())
     .then(        
       (result) => {        
         document.getElementById("checkbox_" +_port ).checked = result.status=='on' ? true : false;        
+        //this_states.scanner.start(this_states.camera);
         return true;
+        //window.location.reload(false);
+
+
+
       }
     )
 
   }
+  reset_last_port_scanned(){
+    this.state.last_qr_port=0;
+    console.log("reset timer");
+  }
+ 
 
   render() {
     const { error, isLoaded, items } = this.state;
+
+
+    let this_states = this.state;
+    let _me_this = this;
+
+    
+    Instascan.Camera.getCameras().then(function (cameras) {
+
+      if (cameras.length > 0) {
+        let ca_camera = cameras[0];        
+        this_states.scanner.start(ca_camera);
+        this_states.camera=ca_camera;
+      } else {
+        console.error('No cameras found.');
+      }
+      }).catch(function (e) {
+        console.error(e);
+    });
+
+
+    this.state.scanner.addListener('scan', function (content) {  
+  
+      
+      content= JSON.parse(content);     
+      if (content.port==undefined) return ; 
+      console.log('detected -> ' +content.port);
+      //if (this_states.last_qr_port==content.port) return ;
+
+      //this_states.scanner.stop(this_states.camera);
+      //document.getElementById("checkbox_" + content.port ).checked = ! document.getElementById("checkbox_" + content.port ).checked;        
+      //this_states.scanner.start(this_states.camera);
+      _me_this.Breaker_click(content.port);
+
+      //setTimeout(_me_this.reset_last_port_scanned, 15000);
+
+ 
+    });
+
+    
+
+
     
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -190,7 +217,7 @@ class BreakerPanel extends React.Component {
             <div key={item.id} id={"port_"+item.port}  class='col-md-3 port' port={item.port}  > 
             Port:{item.port}
                 <label>
-                    <input id={"checkbox_"+item.port}  class='pristine' onChange={() => this.Breaker_click(item.port)}  type='checkbox' name='switch' checked={item.status=='on' ? 'checked':''}/>
+                    <input id={"checkbox_"+item.port}  class='pristine' onChange={() => this.Breaker_click(item.port)}  type='checkbox' name='switch' checked={item.status=='on' ? 'checked':''} />
                 </label>
             </div>
           ))}
@@ -219,5 +246,5 @@ const frm_section = ReactDOM.createRoot(
 const _breakerPanel = <BreakerPanel name='breaker_list'/>;
 panel.render(_breakerPanel);
 
-const _frmQR_Catch = <Form_QR_Detected_Request  />;
-frm_section.render(_frmQR_Catch);
+//const _frmQR_Catch = <Form_QR_Detected_Request  />;
+//frm_section.render(_frmQR_Catch);

@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@babel/preset-react": "^7.18.6",
+        "compile": "^0.0.2",
         "instascan": "^1.0.0",
         "jquery": "^3.6.0",
         "react": "^18.1.0",

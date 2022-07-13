@@ -2101,10 +2101,6 @@ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"
 
 console.log('start app');
 
-function clean_previous_qr() {
-  document.getElementById("code_info").style.display = "none"; //scanner.start(camera);
-}
-
 var Form_QR_Detected_Request = /*#__PURE__*/function (_React$Component) {
   _inherits(Form_QR_Detected_Request, _React$Component);
 
@@ -2118,11 +2114,7 @@ var Form_QR_Detected_Request = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
     _this.state = {
       port: 0,
-      status: 'off',
-      scanner: new Instascan.Scanner({
-        video: document.getElementById('preview')
-      }),
-      camera: null
+      status: 'off'
     };
     _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
     return _this;
@@ -2130,13 +2122,24 @@ var Form_QR_Detected_Request = /*#__PURE__*/function (_React$Component) {
 
   _createClass(Form_QR_Detected_Request, [{
     key: "save_form",
-    value: function save_form() {
-      console.log("saving ... ");
-      fetch("/post-gpio-order").then(function (res) {
+    value: function save_form(port_number, port_status) {
+      var _this2 = this;
+
+      console.log("saving ... " + port_status);
+      fetch("/post-gpio-order?port=" + port_number + "&status=" + port_status, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "GET"
+      }).then(function (res) {
         return res.json();
       }).then(function (result) {
-        document.getElementById("checkbox_" + _port).checked = result.status == 'on' ? true : false;
-        return true;
+        _this2.track_action(_this2.state.status, _this2.state.port);
+
+        document.getElementById("checkbox_" + port_number).checked = port_status == 'on' ? true : false; // window.location.reload(false);
+
+        return false; // it returns false to avoid refresh page;
       });
       return false;
     }
@@ -2150,7 +2153,9 @@ var Form_QR_Detected_Request = /*#__PURE__*/function (_React$Component) {
     }
   }, {
     key: "track_action",
-    value: function track_action(port, status) {}
+    value: function track_action(port, status) {
+      console.log(port, status);
+    }
   }, {
     key: "returnfalse",
     value: function returnfalse() {
@@ -2159,36 +2164,11 @@ var Form_QR_Detected_Request = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
-      var this_states = this.state;
-
-      var _me_this = this;
-
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-          var ca_camera = cameras[0];
-          this_states.scanner.start(ca_camera);
-        } else {
-          console.error('No cameras found.');
-        }
-      })["catch"](function (e) {
-        console.error(e);
-      });
-      this_states.scanner.addListener('scan', function (content) {
-        content = JSON.parse(content);
-
-        _me_this.setState({
-          port: content.port
-        });
-
-        _me_this.setState({
-          status: content.status
-        });
-      });
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
         onSubmit: function onSubmit() {
-          return _this2.returnfalse();
+          return _this3.returnfalse();
         }
       }, "Port:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
         id: "port",
@@ -2196,7 +2176,7 @@ var Form_QR_Detected_Request = /*#__PURE__*/function (_React$Component) {
         type: "number",
         value: this.state.port,
         onChange: function onChange() {
-          return _this2.handleInputChange();
+          return _this3.handleInputChange();
         }
       }), "Status:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
         id: "status",
@@ -2204,13 +2184,13 @@ var Form_QR_Detected_Request = /*#__PURE__*/function (_React$Component) {
         type: "text",
         value: this.state.status,
         onChange: function onChange() {
-          return _this2.handleInputChange();
+          return _this3.handleInputChange();
         }
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
         type: "button",
         value: "Process",
         onClick: function onClick() {
-          return _this2.save_form();
+          return _this3.save_form(_this3.state.port, _this3.state.status);
         }
       }));
     }
@@ -2225,28 +2205,33 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
   var _super2 = _createSuper(BreakerPanel);
 
   function BreakerPanel(props) {
-    var _this3;
+    var _this4;
 
     _classCallCheck(this, BreakerPanel);
 
-    _this3 = _super2.call(this, props);
-    _this3.state = {
+    _this4 = _super2.call(this, props);
+    _this4.state = {
       error: null,
       isLoaded: false,
-      items: []
+      items: [],
+      scanner: new Instascan.Scanner({
+        video: document.getElementById('preview')
+      }),
+      camera: null,
+      last_qr_port: 0
     };
-    return _this3;
+    return _this4;
   }
 
   _createClass(BreakerPanel, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this4 = this;
+      var _this5 = this;
 
       fetch("/port-status").then(function (res) {
         return res.json();
       }).then(function (result) {
-        _this4.setState({
+        _this5.setState({
           isLoaded: true,
           items: result
         });
@@ -2254,7 +2239,7 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
       // un bloque catch() para que no interceptemos errores
       // de errores reales en los componentes.
       function (error) {
-        _this4.setState({
+        _this5.setState({
           isLoaded: true,
           error: error
         });
@@ -2263,22 +2248,57 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "Breaker_click",
     value: function Breaker_click(_port) {
+      var this_states = this.state; //this_states.scanner.stop(this_states.camera);
+
       fetch("/set-port-status?port=" + _port).then(function (res) {
         return res.json();
       }).then(function (result) {
-        document.getElementById("checkbox_" + _port).checked = result.status == 'on' ? true : false;
-        return true;
+        document.getElementById("checkbox_" + _port).checked = result.status == 'on' ? true : false; //this_states.scanner.start(this_states.camera);
+
+        return true; //window.location.reload(false);
       });
+    }
+  }, {
+    key: "reset_last_port_scanned",
+    value: function reset_last_port_scanned() {
+      this.state.last_qr_port = 0;
+      console.log("reset timer");
     }
   }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this6 = this;
 
       var _this$state = this.state,
           error = _this$state.error,
           isLoaded = _this$state.isLoaded,
           items = _this$state.items;
+      var this_states = this.state;
+
+      var _me_this = this;
+
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          var ca_camera = cameras[0];
+          this_states.scanner.start(ca_camera);
+          this_states.camera = ca_camera;
+        } else {
+          console.error('No cameras found.');
+        }
+      })["catch"](function (e) {
+        console.error(e);
+      });
+      this.state.scanner.addListener('scan', function (content) {
+        content = JSON.parse(content);
+        if (content.port == undefined) return;
+        console.log('detected -> ' + content.port); //if (this_states.last_qr_port==content.port) return ;
+        //this_states.scanner.stop(this_states.camera);
+        //document.getElementById("checkbox_" + content.port ).checked = ! document.getElementById("checkbox_" + content.port ).checked;        
+        //this_states.scanner.start(this_states.camera);
+
+        _me_this.Breaker_click(content.port); //setTimeout(_me_this.reset_last_port_scanned, 15000);
+
+      });
 
       if (error) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Error: ", error.message);
@@ -2295,7 +2315,7 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
             id: "checkbox_" + item.port,
             "class": "pristine",
             onChange: function onChange() {
-              return _this5.Breaker_click(item.port);
+              return _this6.Breaker_click(item.port);
             },
             type: "checkbox",
             name: "switch",
@@ -2317,11 +2337,8 @@ var _breakerPanel = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().cr
   name: "breaker_list"
 });
 
-panel.render(_breakerPanel);
-
-var _frmQR_Catch = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Form_QR_Detected_Request, null);
-
-frm_section.render(_frmQR_Catch);
+panel.render(_breakerPanel); //const _frmQR_Catch = <Form_QR_Detected_Request  />;
+//frm_section.render(_frmQR_Catch);
 
 /***/ }),
 
