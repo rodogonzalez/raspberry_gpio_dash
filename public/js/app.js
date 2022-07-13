@@ -2291,6 +2291,7 @@ var BreakerPanel = /*#__PURE__*/function (_React$Component2) {
         console.error(e);
       });
       this.state.scanner.addListener('scan', function (content) {
+        document.getElementById("audio_controler").play();
         content = JSON.parse(content);
         if (content.port == undefined) return;
         console.log('detected -> ' + content.port); //if (this_states.last_qr_port==content.port) return ;
