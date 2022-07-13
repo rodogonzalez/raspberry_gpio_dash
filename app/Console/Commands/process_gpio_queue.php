@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use PiPHP\GPIO\GPIO;
 //use PiPHP\GPIO\Pin\InputPinInterface;
+use Illuminate\Support\Facades\Cache;
+
 use PiPHP\GPIO\Pin\PinInterface;
 
 
@@ -106,12 +108,9 @@ class process_gpio_queue extends Command
 
         // Create a GPIO object
         $gpio = new GPIO();         
-
-         $ports =Cache::rememberForever('ports_image',  function () {
+ 
             $ports = \App\Models\Port::all();
-            return json_encode($ports);
-        });
-
+  
         foreach($ports as $port){
             $pin = $gpio->getOutputPin($port->port);
             switch($port->status){
@@ -140,9 +139,9 @@ class process_gpio_queue extends Command
 // this command is executed each minute, so to keep it executing each 2 seconds , it will be using the command sleep to 
 // await , the execution of this command will take around 1 minute 
         $this->every_raise();        
-        for($second=0; $second<=30; $second++){
+        for($second=0; $second<=500; $second++){
             $this->get_port_status();        
-            sleep(2);
+            sleep(5);
         }        
     }
 }
