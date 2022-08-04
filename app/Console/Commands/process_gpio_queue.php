@@ -57,13 +57,13 @@ class process_gpio_queue extends Command
 
             
 
-            $pin = $gpio->getOutputPin($gpio_command->port);
+           // $pin = $gpio->getOutputPin($gpio_command->port);
             switch ($gpio_command->command){
                 case "on":
-                    $pin->setValue(PinInterface::VALUE_LOW);
+             //       $pin->setValue(PinInterface::VALUE_LOW);
                     break;
                 case "off":
-                    $pin->setValue(PinInterface::VALUE_HIGH);
+                //    $pin->setValue(PinInterface::VALUE_HIGH);
                     break;
             }
             //sleep($gpio_command->delay);                       
@@ -93,8 +93,8 @@ class process_gpio_queue extends Command
         $ports = \App\Models\Port::all();
 
         foreach($ports as $port){
-            $pin = $gpio->getOutputPin($port->port);
-            $pin->setValue(PinInterface::VALUE_HIGH);            
+          //  $pin = $gpio->getOutputPin($port->port);
+          //  $pin->setValue(PinInterface::VALUE_HIGH);            
             $port->status='off';
             $port->save();
         }
@@ -112,13 +112,13 @@ class process_gpio_queue extends Command
          
 
         foreach($ports as $port){
-            $pin = $gpio->getOutputPin($port->port);
+         //   $pin = $gpio->getOutputPin($port->port);
             switch($port->status){
                 case "on":
-                    $pin->setValue(PinInterface::VALUE_LOW);
+            //        $pin->setValue(PinInterface::VALUE_LOW);
                     break;
                 case "off":
-                    $pin->setValue(PinInterface::VALUE_HIGH);
+              //      $pin->setValue(PinInterface::VALUE_HIGH);
                     break;
             }            
             

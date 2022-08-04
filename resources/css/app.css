@@ -129,10 +129,10 @@ body {
     margin: 0;
     padding: 0;
     position: relative;
-    top: 1.5em;
-    left: 0.5em;
-    width: 4.5em;
-    height: 5em;
+    top: 25px;
+    left: 7px;
+    width: 80px;
+    height: 36px;
     transform: rotateX(-20deg) translateZ(0.75em);
     transition: transform var(--transDur) ease-in-out;
     -webkit-appearance: none;
@@ -154,7 +154,7 @@ body {
        box-shadow var(--transDur) ease-in-out,
        filter var(--transDur) ease-in-out,
        -webkit-filter var(--transDur) ease-in-out;
-    width: 100px;
+    width: 68px;
     height: 80px;
   }
   input[type=checkbox]:before {
